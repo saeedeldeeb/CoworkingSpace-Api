@@ -1,17 +1,16 @@
 var createError = require('http-errors');
-var express = require('express');
+const express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose')
-
+const profile = require('./routes/profile');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 // connection to mongoose
-
-mongoose.connect('mongodb://localhost/backend', {useNewUrlParser: true , useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/playground', {useNewUrlParser: true , useUnifiedTopology: true });
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -19,6 +18,7 @@ db.once('open', function() {
   // we're connected!
   console.log('we\'re connected ');
 });
+
 
 
 // view engine setup
@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/api/users',profile);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
