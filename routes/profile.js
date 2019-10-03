@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 
 
-router.get('/me', async (req, res) => {
+router.post('/me', async (req, res) => {
     let user;
     switch(req.body.cat){
         case 'company':
