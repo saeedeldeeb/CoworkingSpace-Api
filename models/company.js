@@ -13,6 +13,6 @@ const companySchema = new mongoose.Schema({
 
 
 
-const Company = mongoose.model('companys', companySchema)
+const Company = mongoose.model('companys', companySchema,'users')
 
 module.exports = Company
