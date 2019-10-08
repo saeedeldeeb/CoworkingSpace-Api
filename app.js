@@ -7,6 +7,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose')
 const profile = require('./routes/profile');
 const login = require('./routes/login');
+const rentAndCafteria = require('./routes/rentAndCafteria');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api',rentAndCafteria);
 app.use('/api/users',profile);
 app.use('/api/login',login);
 app.use('/', indexRouter);
