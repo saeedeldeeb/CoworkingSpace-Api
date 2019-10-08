@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose')
 const profile = require('./routes/profile');
+const login = require('./routes/login');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -33,6 +34,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/users',profile);
+app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
