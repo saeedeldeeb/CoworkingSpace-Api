@@ -12,9 +12,8 @@ router.post('/forRentAndCafetriaCategory', async (req, res) => {
 router.post('/forRentAndCafetriaItems', async (req, res) => {
     let result = null;
     const itemRef = await cat.findById(req.body._id,'ref');
-    console.log(itemRef);
-    console.log(itemRef.ref.collection);
-
+    // console.log(itemRef);
+    // console.log(itemRef.ref.collection);
     switch (itemRef.ref.collection) {
         case "rent":
             console.log(itemRef.ref.class);
@@ -24,6 +23,7 @@ router.post('/forRentAndCafetriaItems', async (req, res) => {
             result = await cafeteria.find({ class: itemRef.ref.class });
             break;
     }
+    
     res.send(result)
 });
 
