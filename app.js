@@ -27,10 +27,15 @@ db.once('open', function() {
   console.log('we\'re connected ');
 });
 
-//caught unhandeled Exceptions
+//caught uncaught Exceptions
 process.on('uncaughtException',(ex)=>{
-console.log('WE CAUGHT UNHANDELED EXCEPTIONS');
+console.log('WE CAUGHT UNCAUGHT EXCEPTIONS');
 });
+
+//caught unhandeled Promises
+process.on('uncaughtException',(ex)=>{
+  console.log('WE CAUGHT UNHANDELED PROMISES');
+  });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
