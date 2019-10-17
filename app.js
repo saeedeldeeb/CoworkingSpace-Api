@@ -1,15 +1,20 @@
 var createError = require('http-errors');
+require('express-async-errors');
 const express = require('express');
 var path = require('path');
 const cors = require('cors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+require('config');
 const profile = require('./routes/profile');
 const login = require('./routes/login');
 const rentAndCafteria = require('./routes/rentAndCafteria');
+const events = require('./routes/events');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const error = require('./middleware/error');
+
 
 const app = express();
 // connection to mongoose
@@ -22,7 +27,10 @@ db.once('open', function() {
   console.log('we\'re connected ');
 });
 
-
+//caught unhandeled Exceptions
+process.on('uncaughtException',(ex)=>{
+console.log('WE CAUGHT UNHANDELED EXCEPTIONS');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,10 +43,12 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api',rentAndCafteria);
+app.use('/api',events);
 app.use('/api/users',profile);
 app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use(error);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

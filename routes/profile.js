@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth')
 const Admin = require('../models/302admin');
 const Company = require('../models/company');
 const Customer = require('../models/customer');
@@ -6,20 +7,20 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post('/me', async (req, res) => {
+router.post('/me',auth, async (req, res) => {
     let user;
     switch(req.body.cat){
         case 'company':
-            user = await Company.findById(req.body._id).select('-password');
+            user = await Company.findById(req.user._id).select('-password');
             break;
         case 'employee':
-            user = await Employee.findById(req.body._id).select('-password');
+            user = await Employee.findById(req.user._id).select('-password');
             break;
         case 'customer':
-            user = await Customer.findById(req.body._id).select('-password');
+            user = await Customer.findById(req.user._id).select('-password');
             break;
         case 'admin':
-            user = await Admin.findById(req.body._id).select('-password');
+            user = await Admin.findById(req.user._id).select('-password');
             break;
         default:
             user = {"result":"Error in ........."}
