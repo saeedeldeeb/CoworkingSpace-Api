@@ -22,13 +22,14 @@ router.post('/addEvent', upload.single('eventFile'),async (req, res) => {
     if (!file) {
         console.log('No image added and default one is used')
     }
-
+let data = JSON.parse(req.body.data);
+console.log(data)
     let newEvent = new events({
         image:file.filename,
-        name: req.body.data.name,
-        date: req.body.data.date,
-        description: req.body.data.description,
-        sponsor:req.body.data.sponsor
+        name: data.name,
+        date: data.date,
+        description: data.description,
+        sponsor:data.sponsor
     })
     await newEvent.save();
     res.send(newEvent);
