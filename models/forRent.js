@@ -6,7 +6,7 @@ const rentSchema = new mongoose.Schema({
     info: { type: String, required: true },
     price: { type: Number, required: true },
     availabilityInStock: { type: Number, required: true },
-    class: { type: String, required: true }
+    rentID: { type: String, required: true }
 });
 
 const ForRent = mongoose.model('forRent',rentSchema);

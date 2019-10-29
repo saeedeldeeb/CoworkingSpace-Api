@@ -5,7 +5,7 @@ const cafeteriaSchema = new mongoose.Schema({
     name: { type: String, required: true },
     price: { type: Number, required: true },
     availability: { type: Boolean, required: true },
-    class:{type:String,required:true}
+    cafeID:{type:String,required:true}
 });
 
 const Cafeteria = mongoose.model('cafeteria',cafeteriaSchema);
