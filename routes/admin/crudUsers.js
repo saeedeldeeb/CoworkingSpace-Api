@@ -2,12 +2,15 @@ const Admin = require('../../models/302admin');
 const Company = require('../../models/company');
 const Customer = require('../../models/customer');
 const Employee = require('../../models/employee');
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 var ObjectID = require('mongodb').ObjectID;
 const express = require('express');
 const router = express.Router();
 
-router.post('/getAllUsers', async (req, res) => {
+router.post('/getAllUsers',[auth,admin], async (req, res) => {
     console.log(req.body)
     let users;
     switch (req.body.label) {
@@ -33,7 +36,7 @@ router.post('/getAllUsers', async (req, res) => {
     res.send(data);
 })
 
-router.put('/updateUser', async (req, res) => {
+router.put('/updateUser',[auth,admin], async (req, res) => {
     params = {
         role: req.body.role,
         companyName: req.body.newName,
@@ -65,12 +68,15 @@ router.put('/updateUser', async (req, res) => {
             updateUser = { "result": "Error in ........." }
             break;
     }
+    const salt = await bcrypt.genSalt(10);
+    if(params.password !=null)
+    updateUser.password = await bcrypt.hash(params.password, salt);
 
     res.send(updateUser);
 });
 
 
-router.delete('/deleteUser', async (req, res) => {
+router.delete('/deleteUser',[auth,admin], async (req, res) => {
     mongoose.connection.db.collection('users', async (err, collection) => {
         let user = await collection.findOneAndDelete({ _id: ObjectID(req.body._id) });
         // console.log(user);

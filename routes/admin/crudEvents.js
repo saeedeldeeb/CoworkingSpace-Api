@@ -1,4 +1,6 @@
 const events = require('../../models/events');
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
 const multer = require('multer');
 const fs = require('fs');
 const express = require('express');
@@ -16,41 +18,42 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.post('/addEvent', upload.single('eventFile'),async (req, res) => {
+router.post('/addEvent',[auth,admin], upload.single('eventFile'), async (req, res) => {
     const file = req.file;
-
+    let fileName = "eventDefault.png";
     if (!file) {
         console.log('No image added and default one is used')
-    }
-let data = JSON.parse(req.body.data);
-console.log(data)
+    } else fileName = file.filename;
+    let data = JSON.parse(req.body.data);
     let newEvent = new events({
-        image:file.filename,
+        image: fileName,
         name: data.name,
         date: data.date,
         description: data.description,
-        sponsor:data.sponsor
+        sponsor: data.sponsor
     })
     await newEvent.save();
+    console.log(newEvent)
+
     res.send(newEvent);
 })
 
-router.put('/updateEvent', async (req, res) => {
-   let params = {
+router.put('/updateEvent', [auth,admin],async (req, res) => {
+    let params = {
         name: req.body.name,
         date: req.body.date,
         description: req.body.description
-        }
-        for(let prop in params) if(!params[prop]) delete params[prop];
-        console.log(params)
+    }
+    for (let prop in params) if (!params[prop]) delete params[prop];
+    console.log(params)
 
-    let updatedEvent = await events.findByIdAndUpdate(req.body._id, params,{new:true});
+    let updatedEvent = await events.findByIdAndUpdate(req.body._id, params, { new: true });
 
     res.send(updatedEvent);
 })
 
 // Uploading image
-router.put('/updateEventImage', upload.single('eventFile'), async (req, res,next) => {
+router.put('/updateEventImage', [auth,admin],upload.single('eventFile'), async (req, res, next) => {
     // console.log(randNum);
     const file = req.file;
     // console.log(file.filename);
@@ -59,23 +62,23 @@ router.put('/updateEventImage', upload.single('eventFile'), async (req, res,next
         error.httpStatusCode = 400
         return next(error)
     }
-    let eventImg = await events.findByIdAndUpdate(req.user._id, { image: file.filename }, { new: true });
+    let eventImg = await events.findByIdAndUpdate(req.body._id, { image: file.filename }, { new: true });
     if (eventImg.result)
-        res.send({Status:"Error"})
+        res.send({ Status: "Error" })
     else
-        res.send({ status: 'done' });
+        res.send({ Status: 'Done' });
 })
 
-router.delete('/deleteEvent',async(req,res)=>{
-    const img = await events.findById(req.body._id,'image');
-    if(img.image != 'eventDefault.png'){
-    try {
-        fs.unlinkSync('uploads/eventImages/'+img.image)
-        console.log('file removed')
-        //file removed
-      } catch(err) {
-        console.error(err)
-      }
+router.delete('/deleteEvent', [auth,admin],async (req, res) => {
+    const img = await events.findById(req.body._id, 'image');
+    if (img.image != 'eventDefault.png') {
+        try {
+            fs.unlinkSync('uploads/eventImages/' + img.image)
+            console.log('file removed')
+            //file removed
+        } catch (err) {
+            console.error(err)
+        }
     }
     let deletedEvent = await events.findByIdAndDelete(req.body._id)
     res.send(deletedEvent);
