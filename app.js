@@ -7,10 +7,18 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 require('config');
+const bodyParser = require('body-parser');
+const register = require('./routes/register');
 const profile = require('./routes/profile');
 const login = require('./routes/login');
 const rentAndCafteria = require('./routes/rentAndCafteria');
 const events = require('./routes/events');
+//Admin requires
+const crudUsers = require('./routes/admin/crudUsers');
+const crudCategory = require('./routes/admin/crudCategory');
+const crudProduct = require('./routes/admin/crudProducts');
+const crudEvent = require('./routes/admin/crudEvents');
+//------------
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const error = require('./middleware/error');
@@ -26,6 +34,7 @@ db.once('open', function() {
   // we're connected!
   console.log('we\'re connected ');
 });
+mongoose.set('useFindAndModify', false);
 
 //caught uncaught Exceptions
 process.on('uncaughtException',(ex)=>{
@@ -40,19 +49,30 @@ process.on('uncaughtException',(ex)=>{
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use(express.static('uploads/catImages'));
+app.use(express.static('uploads/profileImage'));
+app.use(express.static('uploads/eventImages'));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({ origin: "*" }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api/users',profile);
+app.use('/api/users',register);
 app.use('/api',rentAndCafteria);
 app.use('/api',events);
-app.use('/api/users',profile);
 app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+//Admin uses
+app.use('/api/admin',crudUsers);
+app.use('/api/admin',crudCategory);
+app.use('/api/admin',crudProduct);
+app.use('/api/admin',crudEvent);
+//----------
 app.use(error);
 
 // catch 404 and forward to error handler

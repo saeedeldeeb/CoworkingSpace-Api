@@ -7,7 +7,8 @@ const employeeSchema = new mongoose.Schema({
     email: {type: String, required: true},
     avatar: String,
     password: {type: String, required: true},
-    companyRef: {type: String, required: true}
+    companyRef: {type: String, required: true},
+    label:{type:String,required:true}
 });
 
 

@@ -6,9 +6,10 @@ const companySchema = new mongoose.Schema({
     phone: {type: String, minlength: 11, maxlength: 14},
     email: {type: String, required: true},
     owner: {type: String, required: true},
-    roomnumber: String,
-    avatar: String,
+    roomNumber: String,
+    avatar: {required:false},
     password: {type: String, required: true},
+    label:{type:String,required:true}
 });
 
 
