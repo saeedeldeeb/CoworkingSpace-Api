@@ -18,6 +18,9 @@ const crudUsers = require('./routes/admin/crudUsers');
 const crudCategory = require('./routes/admin/crudCategory');
 const crudProduct = require('./routes/admin/crudProducts');
 const crudEvent = require('./routes/admin/crudEvents');
+//Firebase Cloud Messaging
+const fcm = require('./routes/fcm/fcmTokens');
+const pushMessage = require('./routes/fcm/pushMessages')
 //------------
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -38,12 +41,12 @@ mongoose.set('useFindAndModify', false);
 
 //caught uncaught Exceptions
 process.on('uncaughtException',(ex)=>{
-console.log('WE CAUGHT UNCAUGHT EXCEPTIONS');
+console.log('WE CAUGHT UNCAUGHT EXCEPTIONS',ex);
 });
 
 //caught unhandeled Promises
 process.on('uncaughtException',(ex)=>{
-  console.log('WE CAUGHT UNHANDELED PROMISES');
+  console.log('WE CAUGHT UNHANDELED PROMISES',ex);
   });
 
 // view engine setup
@@ -67,11 +70,15 @@ app.use('/api',events);
 app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+//Firebase Cloud Messaging
+app.use('/api/addToken',fcm);
+app.use('/api/pushMessage',pushMessage);
 //Admin uses
 app.use('/api/admin',crudUsers);
 app.use('/api/admin',crudCategory);
 app.use('/api/admin',crudProduct);
 app.use('/api/admin',crudEvent);
+
 //----------
 app.use(error);
 

@@ -52,7 +52,7 @@ router.put('/updateCategoryImage', [auth,admin],upload.single('catFile'), async 
         error.httpStatusCode = 400
         return next(error)
     }
-    let cat = await Cat.findByIdAndUpdate(req.user._id, { image: file.filename }, { new: true });
+    let cat = await Cat.findByIdAndUpdate(req.body._id, { image: file.filename }, { new: true });
     if (cat.result)
         res.send({Status:"Error"})
     else
