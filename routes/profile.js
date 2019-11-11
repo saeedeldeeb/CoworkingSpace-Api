@@ -33,7 +33,7 @@ router.post('/me/update', auth, async (req, res) => {
     let updateUser;
     switch (req.body.cat) {
         case 'company':
-            updateUser = await Company.findByIdAndUpdate(req.user._id, { companyName: req.body.newName }, { new: true });
+            updateUser = await Company.findByIdAndUpdate(req.user._id, { name: req.body.newName }, { new: true });
             break;
         case 'employee':
             updateUser = await Employee.findByIdAndUpdate(req.user._id, { name: req.body.newName }, { new: true });
@@ -79,7 +79,7 @@ router.post('/image', auth, upload.single('file'), async (req, res) => {
         return next(error)
     }
     let user;
-    switch (req.body.cat) {
+    switch (req.user.label) {
         case 'company':
             user = await Company.findByIdAndUpdate(req.user._id, { avatar: file.filename }, { new: true });
             break;
@@ -90,11 +90,8 @@ router.post('/image', auth, upload.single('file'), async (req, res) => {
             user = { "result": "Error" }
             break;
     }
-    console.log(user);
-    if (user.result)
-        res.send(user)
-    else
-        res.send({ status: 'done' });
+    delete user["password"]
+    res.send(user);
 })
 
 module.exports = router; 

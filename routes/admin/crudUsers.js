@@ -39,7 +39,7 @@ router.post('/getAllUsers',[auth,admin], async (req, res) => {
 router.put('/updateUser',[auth,admin], async (req, res) => {
     params = {
         role: req.body.role,
-        companyName: req.body.companyName,
+        name: req.body.name,
         owner: req.body.owner,
         roomNumber: req.body.roomNumber,
         name: req.body.name,

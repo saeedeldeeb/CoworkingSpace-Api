@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/allCompanies', async (req, res) => {
-    const companies = await Company.find().select('companyName').sort('name');
+    const companies = await Company.find().select('name').sort('name');
     res.send(companies);
 });
 
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         switch (req.body.label) {
             case 'company':
-                addUser = new Company(_.pick(req.body, ['companyName', 'email', 'password', 'phone', 'owner', 'roomNumber', 'label']));
+                addUser = new Company(_.pick(req.body, ['name', 'email', 'password', 'phone', 'owner', 'roomNumber', 'label']));
                 addUser.password = await bcrypt.hash(addUser.password, salt);
                 break;
             case 'employee':
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
                 addUser.password = await bcrypt.hash(addUser.password, salt);
                 break;
             default:
-                addUser = { "result": "Error in ........." }
+                addUser = { "result": "Not correct label" }
                 return res.send(addUser);
         }
         await addUser.save();

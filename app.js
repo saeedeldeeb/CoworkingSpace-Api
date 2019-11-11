@@ -13,14 +13,14 @@ const profile = require('./routes/profile');
 const login = require('./routes/login');
 const rentAndCafteria = require('./routes/rentAndCafteria');
 const events = require('./routes/events');
+//Notification
+const requestItems = require('./routes/requests/requestItem');
+const seeNewRequests = require('./routes/requests/seeNewRequests')
 //Admin requires
 const crudUsers = require('./routes/admin/crudUsers');
 const crudCategory = require('./routes/admin/crudCategory');
 const crudProduct = require('./routes/admin/crudProducts');
 const crudEvent = require('./routes/admin/crudEvents');
-//Firebase Cloud Messaging
-const fcm = require('./routes/fcm/fcmTokens');
-const pushMessage = require('./routes/fcm/pushMessages')
 //------------
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -70,9 +70,9 @@ app.use('/api',events);
 app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-//Firebase Cloud Messaging
-app.use('/api/addToken',fcm);
-app.use('/api/pushMessage',pushMessage);
+//Notification
+app.use('/api',[requestItems,seeNewRequests]);
+
 //Admin uses
 app.use('/api/admin',crudUsers);
 app.use('/api/admin',crudCategory);
