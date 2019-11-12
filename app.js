@@ -15,7 +15,10 @@ const rentAndCafteria = require('./routes/rentAndCafteria');
 const events = require('./routes/events');
 //Notification
 const requestItems = require('./routes/requests/requestItem');
-const seeNewRequests = require('./routes/requests/seeNewRequests')
+const seeNewRequests = require('./routes/requests/seeNewRequests');
+//billing 
+const billing = require('./routes/billing/getBillingForUsers');
+const billingUpdate = require('./routes/billing/billingUpdate');
 //Admin requires
 const crudUsers = require('./routes/admin/crudUsers');
 const crudCategory = require('./routes/admin/crudCategory');
@@ -72,7 +75,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 //Notification
 app.use('/api',[requestItems,seeNewRequests]);
-
+//Billing
+app.use('/api/billing',[billing,billingUpdate]);
 //Admin uses
 app.use('/api/admin',crudUsers);
 app.use('/api/admin',crudCategory);
