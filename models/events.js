@@ -6,7 +6,6 @@ const eventSchema = new mongoose.Schema({
     date:{type:Number,required:true},
     description:{type:String,default:"No Description provided"},
     sponsor:{type:String,default:"No specific Sponsor"} ,
-    numOfGuests:Number,
     guests:{type:Array,required:false}
 });
 
