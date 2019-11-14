@@ -1,10 +1,11 @@
 const RentRequests = require('../../models/rentRequests');
 const CofeRequests = require('../../models/cofeRequests');
 const auth = require('../../middleware/auth');
+const isAdmin = require('../../middleware/admin');
 const express = require('express');
 const router = express.Router();
 
-router.put('/markAsPaid',auth, async (req, res) => {
+router.put('/markAsPaid',[auth,isAdmin], async (req, res) => {
     let isUpdated = false;
     switch (req.body.cat) {
         case 'rent':
@@ -27,7 +28,7 @@ router.put('/markAsPaid',auth, async (req, res) => {
     res.send({ isUpdated });
 })
 
-router.put('/markAllAsPaid',auth, async (req, res) => {
+router.put('/markAllAsPaid',[auth,isAdmin], async (req, res) => {
     let result;
     try {
         result = await RentRequests.updateMany({ paid: false }, { paid: true });
@@ -35,7 +36,6 @@ router.put('/markAllAsPaid',auth, async (req, res) => {
     } catch (err) {
         return res.status(400).send('Error in payment');
     }
-    console.log();
 
     if (result.nModified > 0)
         res.send('Payment Done')

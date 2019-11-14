@@ -15,11 +15,9 @@ router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
 
     switch (req.body.role) {
         case 'rentAdmin':
-        case 'superAdmin':
             notSeenRequests = await RentRequests.find({ status: req.body.status });
             break;
         case 'cofeAdmin':
-        case 'superAdmin':
             notSeenRequests = await CofeRequests.find({ status: req.body.status });
             break;
         default:
@@ -32,13 +30,11 @@ router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
 
         switch (req.body.role) {
             case 'rentAdmin':
-            case 'superAdmin':
                 productData = await Promise.all(notSeenRequests.map(async (user) => {
                     return await forRents.findOne({ _id: ObjectID(user.productID) });
                 }))
                 break;
             case 'cofeAdmin':
-            case 'superAdmin':
                 productData = await Promise.all(notSeenRequests.map(async (user) => {
                     return await cafee.findOne({ _id: ObjectID(user.productID) });
                 }))
