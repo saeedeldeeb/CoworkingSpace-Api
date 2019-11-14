@@ -11,7 +11,6 @@ router.get('/allEvents', async (req, res) => {
 router.post('/interestinEvent', auth, async (req, res) => {
     const interestedUsers = await event.findOne({ _id: req.body.event_ID }).select('guests -_id');    
     const isUserInterest = interestedUsers.guests.includes(req.user._id);
-    console.log(isUserInterest);
     res.send(isUserInterest);
 });
 
