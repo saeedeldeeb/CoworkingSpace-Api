@@ -31,6 +31,7 @@ router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, re
     }
     let newProd;
     let data = JSON.parse(req.body.data);
+    console.log(data)
     if(data.cat == 'rent'){
      newProd = new forrent({
         image: file.filename,
@@ -38,7 +39,7 @@ router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, re
         info:data.info,
         price:data.price,
         availabilityInStock:data.availabilityInStock,
-        rentID:data._id
+        rentID:data.rentID
     })
 }else if(data.cat == 'cafetria'){
      newProd = new cafeteria({
@@ -46,7 +47,7 @@ router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, re
         name: data.name,
         price:data.price,
         availability:data.availability,
-        cafeID:data._id
+        cafeID:data.cafeID
     })
 }
     await newProd.save();
@@ -54,11 +55,21 @@ router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, re
 })
 
 router.put('/updateProduct', [auth,admin],async (req, res) => {
+    params = {
+        name: req.body.name,
+        info:req.body.info,
+        price:req.body.price,
+        availabilityInStock:req.body.availabilityInStock,
+        availability:req.body.availability,
+        cafeID:req.body.rentID,
+        rentID:req.body.cafeID
+    };
+    for (let prop in params) if (!params[prop]) delete params[prop];
     let product;
     if(req.body.cat == 'rent'){
-     product = await forrent.findByIdAndUpdate(req.body._id, {name:req.body.name},{new:true})
+     product = await forrent.findByIdAndUpdate(req.body._id, params,{new:true})
     }else if(req.body.cat == 'cafetria'){
-     product = await cafeteria.findByIdAndUpdate(req.body._id, {name:req.body.name},{new:true})
+     product = await cafeteria.findByIdAndUpdate(req.body._id, params,{new:true})
     }
     res.send(product)
 })
@@ -79,9 +90,7 @@ router.put('/updateProductImage',[auth,admin], upload.single('proFile'), async (
     }else if(req.body.cat == 'cafetria'){
      product = await cafeteria.findByIdAndUpdate(req.body._id, { image: file.filename },{new:true})
     }
-    if (product.result)
-        res.send({Status:"Error"})
-    else
+
         res.send({ status: 'done' });
 })
 

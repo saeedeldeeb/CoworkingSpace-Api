@@ -24,6 +24,8 @@ router.post('/addEvent',[auth,admin], upload.single('eventFile'), async (req, re
     if (!file) {
         console.log('No image added and default one is used')
     } else fileName = file.filename;
+    console.log(JSON.parse(req.body.data));
+    
     let data = JSON.parse(req.body.data);
     let newEvent = new events({
         image: fileName,

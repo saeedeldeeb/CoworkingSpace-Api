@@ -13,6 +13,12 @@ const profile = require('./routes/profile');
 const login = require('./routes/login');
 const rentAndCafteria = require('./routes/rentAndCafteria');
 const events = require('./routes/events');
+//Notification
+const requestItems = require('./routes/requests/requestItem');
+const seeNewRequests = require('./routes/requests/seeNewRequests');
+//billing 
+const billing = require('./routes/billing/getBillingForUsers');
+const billingUpdate = require('./routes/billing/billingUpdate');
 //Admin requires
 const crudUsers = require('./routes/admin/crudUsers');
 const crudCategory = require('./routes/admin/crudCategory');
@@ -38,12 +44,12 @@ mongoose.set('useFindAndModify', false);
 
 //caught uncaught Exceptions
 process.on('uncaughtException',(ex)=>{
-console.log('WE CAUGHT UNCAUGHT EXCEPTIONS');
+console.log('WE CAUGHT UNCAUGHT EXCEPTIONS',ex);
 });
 
 //caught unhandeled Promises
 process.on('uncaughtException',(ex)=>{
-  console.log('WE CAUGHT UNHANDELED PROMISES');
+  console.log('WE CAUGHT UNHANDELED PROMISES',ex);
   });
 
 // view engine setup
@@ -67,11 +73,16 @@ app.use('/api',events);
 app.use('/api/login',login);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+//Notification
+app.use('/api',[requestItems,seeNewRequests]);
+//Billing
+app.use('/api/billing',[billing,billingUpdate]);
 //Admin uses
 app.use('/api/admin',crudUsers);
 app.use('/api/admin',crudCategory);
 app.use('/api/admin',crudProduct);
 app.use('/api/admin',crudEvent);
+
 //----------
 app.use(error);
 

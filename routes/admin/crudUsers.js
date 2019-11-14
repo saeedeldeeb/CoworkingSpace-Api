@@ -39,7 +39,7 @@ router.post('/getAllUsers',[auth,admin], async (req, res) => {
 router.put('/updateUser',[auth,admin], async (req, res) => {
     params = {
         role: req.body.role,
-        companyName: req.body.newName,
+        name: req.body.name,
         owner: req.body.owner,
         roomNumber: req.body.roomNumber,
         name: req.body.name,
@@ -50,6 +50,11 @@ router.put('/updateUser',[auth,admin], async (req, res) => {
         label: req.body.label,
     };
     for (let prop in params) if (!params[prop]) delete params[prop];
+    //Hashing Users password
+    const salt = await bcrypt.genSalt(10);
+    if(params.password !=null)
+    params.password = await bcrypt.hash(params.password, salt);
+
     let updateUser;
     switch (req.body.label) {
         case 'company':
@@ -68,9 +73,6 @@ router.put('/updateUser',[auth,admin], async (req, res) => {
             updateUser = { "result": "Error in ........." }
             break;
     }
-    const salt = await bcrypt.genSalt(10);
-    if(params.password !=null)
-    updateUser.password = await bcrypt.hash(params.password, salt);
 
     res.send(updateUser);
 });
