@@ -2,6 +2,7 @@ const auth = require('../middleware/auth')
 const Admin = require('../models/302admin');
 const Company = require('../models/company');
 const Customer = require('../models/customer');
+const bcrypt = require('bcrypt');
 const Employee = require('../models/employee');
 const multer = require('multer');
 const express = require('express');
@@ -30,29 +31,45 @@ router.post('/me', auth, async (req, res) => {
 });
 
 router.post('/me/update', auth, async (req, res) => {
-    let updateUser;
-    switch (req.body.cat) {
-        case 'company':
-            updateUser = await Company.findByIdAndUpdate(req.user._id, { name: req.body.newName }, { new: true });
-            break;
-        case 'employee':
-            updateUser = await Employee.findByIdAndUpdate(req.user._id, { name: req.body.newName }, { new: true });
-            break;
-        case 'customer':
-            updateUser = await Customer.findByIdAndUpdate(req.user._id, { name: req.body.newName }, { new: true });
-            break;
-        case 'admin':
-            updateUser = await Admin.findByIdAndUpdate(req.user._id);
-            break;
-        default:
-            updateUser = { "result": "Error in ........." }
-            break;
-    }
+    params = {
+        
+        name: req.body.name,
+        roomNumber: req.body.roomNumber,
+        name: req.body.name,
+        companyRef: req.body.companyRef,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: req.body.newpass,
+    };
+    for (let prop in params) if (!params[prop]) delete params[prop];
+    //Hashing Users password
+    const salt = await bcrypt.genSalt(10);
+    if(params.password !=null)
+    params.password = await bcrypt.hash(params.password, salt);
 
-    delete updateUser["password"];
+    userData = 'userData';
+    updateUsers = {};
+    switch (req.body.label) {
+        case 'company':
+            updateUsers = await Company.findByIdAndUpdate(req.user._id, params, { new: true });
+            break;
+            case 'employee':
+                updateUsers = await Employee.findByIdAndUpdate(req.user._id, params, { new: true });
+                break;
+                case 'customer':
+                    updateUsers = await Customer.findByIdAndUpdate(req.user._id, params, { new: true });
+                    break;
+                    case 'admin':
+                        updateUsers = await Admin.findByIdAndUpdate(req.user._id, params, { new: true });
+                        break;
+                        default:
+                            updateUsers = { "result": "Error in ........." }
+                            break;
+                        }
+                        
+                        let updateUser = {userData: updateUsers};
     res.send(updateUser);
 });
-
 var randNum = Math.floor(Math.random() * Math.floor(1000));
 
 const storage = multer.diskStorage({
