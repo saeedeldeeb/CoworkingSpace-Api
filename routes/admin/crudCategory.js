@@ -1,6 +1,7 @@
 const Cat = require('../../models/category');
 const auth = require('../../middleware/auth');
 const admin = require('../../middleware/admin');
+const superAdmin = require('../../middleware/superAdmin');
 const multer = require('multer');
 const fs = require('fs');
 const express = require('express');
@@ -19,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.post('/addCategory', [auth,admin],upload.single('catFile'), async (req, res,next) => {
+router.post('/addCategory', [auth,admin,superAdmin],upload.single('catFile'), async (req, res,next) => {
     // console.log(randNum);
     const file = req.file;
 
@@ -37,7 +38,7 @@ router.post('/addCategory', [auth,admin],upload.single('catFile'), async (req, r
     res.send(newCat);
 })
 
-router.put('/updateCategory', [auth,admin],upload.single('catFile'), async (req, res) => {
+router.put('/updateCategory', [auth,admin,superAdmin],upload.single('catFile'), async (req, res) => {
     let updatedCategory = await Cat.findByIdAndUpdate(req.body._id, {name:req.body.name}, { new: true })
     res.send(updatedCategory)
 })
@@ -59,7 +60,7 @@ router.put('/updateCategoryImage', [auth,admin],upload.single('catFile'), async 
         res.send({ status: 'done' });
 })
 
-router.delete('/deleteCategory',[auth,admin],async(req,res)=>{
+router.delete('/deleteCategory',[auth,admin,superAdmin],async(req,res)=>{
     const img = await Cat.findById(req.body._id,'image');
     try {
         fs.unlinkSync('uploads/catImages/'+img.image)

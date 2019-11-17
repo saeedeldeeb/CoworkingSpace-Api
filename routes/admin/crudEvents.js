@@ -1,6 +1,7 @@
 const events = require('../../models/events');
 const auth = require('../../middleware/auth');
 const admin = require('../../middleware/admin');
+const superAdmin = require('../../middleware/superAdmin');
 const multer = require('multer');
 const fs = require('fs');
 const express = require('express');
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.post('/addEvent',[auth,admin], upload.single('eventFile'), async (req, res) => {
+router.post('/addEvent',[auth,admin,superAdmin], upload.single('eventFile'), async (req, res) => {
     const file = req.file;
     let fileName = "eventDefault.png";
     if (!file) {
@@ -40,7 +41,7 @@ router.post('/addEvent',[auth,admin], upload.single('eventFile'), async (req, re
     res.send(newEvent);
 })
 
-router.put('/updateEvent', [auth,admin],async (req, res) => {
+router.put('/updateEvent', [auth,admin,superAdmin],async (req, res) => {
     let params = {
         name: req.body.name,
         date: req.body.date,
@@ -55,7 +56,7 @@ router.put('/updateEvent', [auth,admin],async (req, res) => {
 })
 
 // Uploading image
-router.put('/updateEventImage', [auth,admin],upload.single('eventFile'), async (req, res, next) => {
+router.put('/updateEventImage', [auth,admin,superAdmin],upload.single('eventFile'), async (req, res, next) => {
     // console.log(randNum);
     const file = req.file;
     // console.log(file.filename);
@@ -71,7 +72,7 @@ router.put('/updateEventImage', [auth,admin],upload.single('eventFile'), async (
         res.send({ Status: 'Done' });
 })
 
-router.delete('/deleteEvent', [auth,admin],async (req, res) => {
+router.delete('/deleteEvent', [auth,admin,superAdmin],async (req, res) => {
     const img = await events.findById(req.body._id, 'image');
     if (img.image != 'eventDefault.png') {
         try {

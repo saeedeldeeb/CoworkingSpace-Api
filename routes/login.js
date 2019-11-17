@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 });
 
 const generateAuthToken = function () {
-    const token = jwt.sign({ _id: user._id ,label:user.label}, config.get('jwtPrivateKey'));
+    const token = jwt.sign({ _id: user._id ,label:user.label,role:user.role}, config.get('jwtPrivateKey'));
     return token;
 }
 

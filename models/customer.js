@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
     label:{type:String,required:true},
+    role:'customer',
     fcm_token:String
 });
 
