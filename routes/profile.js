@@ -32,7 +32,6 @@ router.post('/me', auth, async (req, res) => {
 
 router.post('/me/update', auth, async (req, res) => {
     params = {
-        
         name: req.body.name,
         roomNumber: req.body.roomNumber,
         name: req.body.name,
@@ -44,8 +43,8 @@ router.post('/me/update', auth, async (req, res) => {
     for (let prop in params) if (!params[prop]) delete params[prop];
     //Hashing Users password
     const salt = await bcrypt.genSalt(10);
-    if(params.password !=null)
-    params.password = await bcrypt.hash(params.password, salt);
+    if (params.password != null)
+        params.password = await bcrypt.hash(params.password, salt);
 
     userData = 'userData';
     updateUsers = {};
@@ -53,21 +52,21 @@ router.post('/me/update', auth, async (req, res) => {
         case 'company':
             updateUsers = await Company.findByIdAndUpdate(req.user._id, params, { new: true });
             break;
-            case 'employee':
-                updateUsers = await Employee.findByIdAndUpdate(req.user._id, params, { new: true });
-                break;
-                case 'customer':
-                    updateUsers = await Customer.findByIdAndUpdate(req.user._id, params, { new: true });
-                    break;
-                    case 'admin':
-                        updateUsers = await Admin.findByIdAndUpdate(req.user._id, params, { new: true });
-                        break;
-                        default:
-                            updateUsers = { "result": "Error in ........." }
-                            break;
-                        }
-                        
-                        let updateUser = {userData: updateUsers};
+        case 'employee':
+            updateUsers = await Employee.findByIdAndUpdate(req.user._id, params, { new: true });
+            break;
+        case 'customer':
+            updateUsers = await Customer.findByIdAndUpdate(req.user._id, params, { new: true });
+            break;
+        case 'admin':
+            updateUsers = await Admin.findByIdAndUpdate(req.user._id, params, { new: true });
+            break;
+        default:
+            updateUsers = { "result": "Error in ........." }
+            break;
+    }
+
+    let updateUser = { userData: updateUsers };
     res.send(updateUser);
 });
 var randNum = Math.floor(Math.random() * Math.floor(1000));

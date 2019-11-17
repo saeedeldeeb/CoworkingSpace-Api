@@ -2,6 +2,7 @@ const forrent = require('../../models/forRent');
 const cafeteria = require('../../models/cafeteria');
 const auth = require('../../middleware/auth');
 const admin = require('../../middleware/admin');
+const superAdmin = require('../../middleware/superAdmin');
 const fs = require('fs');
 const multer = require('multer');
 const express = require('express');
@@ -20,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, res) => {
+router.post('/addProduct', [auth,admin,superAdmin],upload.single('proFile'), async (req, res) => {
     // console.log(randNum);
     const file = req.file;
     // console.log(file.filename);
@@ -54,7 +55,7 @@ router.post('/addProduct', [auth,admin],upload.single('proFile'), async (req, re
     res.send(newProd);
 })
 
-router.put('/updateProduct', [auth,admin],async (req, res) => {
+router.put('/updateProduct', [auth,admin,superAdmin],async (req, res) => {
     params = {
         name: req.body.name,
         info:req.body.info,
@@ -75,7 +76,7 @@ router.put('/updateProduct', [auth,admin],async (req, res) => {
 })
 
 // Uploading image
-router.put('/updateProductImage',[auth,admin], upload.single('proFile'), async (req, res) => {
+router.put('/updateProductImage',[auth,admin,superAdmin], upload.single('proFile'), async (req, res) => {
     // console.log(randNum);
     const file = req.file;
     // console.log(file.filename);
@@ -94,7 +95,7 @@ router.put('/updateProductImage',[auth,admin], upload.single('proFile'), async (
         res.send({ status: 'done' });
 })
 
-router.delete('/deleteProduct',[auth,admin],async(req,res)=>{
+router.delete('/deleteProduct',[auth,admin,superAdmin],async(req,res)=>{
     let product,img;
     if(req.body.cat == 'rent'){
      img = await forrent.findById(req.body._id,'image');

@@ -9,6 +9,7 @@ const companySchema = new mongoose.Schema({
     avatar: {required:false},
     password: {type: String, required: true},
     label:{type:String,required:true},
+    role:'company',
     fcm_token:String
 });
 
