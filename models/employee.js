@@ -8,7 +8,7 @@ const employeeSchema = new mongoose.Schema({
     password: {type: String, required: true},
     companyRef: {type: String, required: true},
     label:{type:String,required:true},
-    role:'employee',
+    role:{type:String,default:'employee'},
     fcm_token:String
 });
 
