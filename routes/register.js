@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/allCompanies', async (req, res) => {
-    const companies = await Company.find().select('name').sort('name');
+    const companies = await Company.find({label:'company'}).select('name').sort('name');
     res.send(companies);
 });
 
