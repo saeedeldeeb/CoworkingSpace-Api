@@ -15,6 +15,7 @@ router.post('/interestinEvent', auth, async (req, res) => {
 });
 
 router.post('/addGuest', auth, async (req, res) => {
+    console.log(req.body.event_ID)
     const newGuest = await event.findByIdAndUpdate(req.body.event_ID, 
         { $addToSet: { guests: req.user._id } },{new:true});
     if (newGuest != null)

@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
     let notSeenRequests, userData, productData;
-    console.log(req.body.role);
+    console.log(req.body);
 
     switch (req.body.role) {
         case 'rentAdmin':
@@ -27,6 +27,7 @@ router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
         userData = await Promise.all(notSeenRequests.map(async (user) => {
             return await collection.findOne({ _id: ObjectID(user.demanderID) });
         }))
+        
 
         switch (req.body.role) {
             case 'rentAdmin':
@@ -42,7 +43,7 @@ router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
         }
 
         notSeenRequests = notSeenRequests.map((notSeenRequestObj) => {
-            let foundEmployee = userData.find((userDataObj) => {
+            let foundEmployee = userData.find((userDataObj) => {                
                 return String(notSeenRequestObj.demanderID) === String(userDataObj._id)
             });
             let foundItem = productData.find((productDataObj) => {

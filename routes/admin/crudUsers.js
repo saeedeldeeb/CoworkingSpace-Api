@@ -2,6 +2,9 @@ const Admin = require('../../models/302admin');
 const Company = require('../../models/company');
 const Customer = require('../../models/customer');
 const Employee = require('../../models/employee');
+const RentRequests = require('../../models/rentRequests');
+const CofeRequests = require('../../models/cofeRequests');
+const fs = require('fs');
 const auth = require('../../middleware/auth');
 const admin = require('../../middleware/admin');
 const superAdmin = require('../../middleware/superAdmin');
@@ -83,10 +86,27 @@ router.delete('/deleteUser',[auth,admin,superAdmin], async (req, res) => {
     mongoose.connection.db.collection('users', async (err, collection) => {
         let user = await collection.findOneAndDelete({ _id: ObjectID(req.body._id) });
         // console.log(user);
+        deleteUserData(user);
         if (user.value == null)
             res.status(400).send('can not delete');
         else
             res.status(200).send('Done')
     })
 })
+
+async function deleteUserData(userData){
+    console.log(userData);
+    
+    if(userData.label != 'customer'){
+    try {
+        fs.unlinkSync('uploads/profileImage/'+userData.value.avatar)
+        console.log('file removed')
+        //file removed
+      } catch(err) {
+        console.error(err)
+      }
+    }
+    await RentRequests.findOneAndDelete({demanderID:userData.value._id});
+    await CofeRequests.findOneAndDelete({demanderID:userData.value._id});
+}
 module.exports = router;
