@@ -49,9 +49,13 @@ router.post('/getNewRentReq', [auth, isAdmin], async (req, res) => {
             let foundItem = productData.find((productDataObj) => {
                 return String(notSeenRequestObj.productID) === String(productDataObj._id)
             });
+            let cost = 0;
+            if (notSeenRequestObj.NumofHours != null)
+                cost = notSeenRequestObj.NumofHours * notSeenRequestObj.NumofItems * foundItem.price;
+            else
+            cost = notSeenRequestObj.NumofItems * foundItem.price;
 
-
-            return { notSeenRequestObj, foundItem, user: foundEmployee };
+                return {cost, notSeenRequestObj, foundItem, user: foundEmployee };
         });
 
         res.send(notSeenRequests);
