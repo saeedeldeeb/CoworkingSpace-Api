@@ -71,9 +71,11 @@ router.put('/requestStatus', [auth, isAdmin], async (req, res) => {
         case 'rentAdmin':
         case 'superAdmin':
             changeStatus = await RentRequests.findByIdAndUpdate(req.body._id, { status: req.body.newStatus }, { new: true });
+            break;
         case 'cofeAdmin':
         case 'superAdmin':
             changeStatus = await CofeRequests.findByIdAndUpdate(req.body._id, { status: req.body.newStatus }, { new: true });
+            break;
     }
     res.send(changeStatus);
 })
