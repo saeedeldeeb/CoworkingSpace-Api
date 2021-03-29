@@ -1,6 +1,6 @@
-const  Admin = require('../models/302admin');
-const  Company = require('../models/company');
-const  Customer = require('../models/customer');
+const Admin = require('../models/302admin');
+const Company = require('../models/company');
+const Customer = require('../models/customer');
 const Employee = require('../models/employee');
 const mongoose = require('mongoose');
 const _ = require('lodash');
@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/allCompanies', async (req, res) => {
-    const companies = await Company.find({label:'company'}).select('name').sort('name');
+    const companies = await Company.find({ label: 'company' }).select('name').sort('name');
     res.send(companies);
 });
 
@@ -49,4 +49,4 @@ router.post('/register', async (req, res) => {
     });
 });
 
-module.exports = router; 
+module.exports = router;

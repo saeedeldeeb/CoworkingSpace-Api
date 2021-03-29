@@ -23,4 +23,5 @@ router.post('/addGuest', auth, async (req, res) => {
     else
         res.send('something error');
 });
+
 module.exports = router;
